@@ -1,5 +1,5 @@
-import {Header} from "@/components/layouts/header/Header";
-import {Footer} from "@/components/layouts/footer/Footer";
+import {Header} from "@/components";
+import {Footer} from "@/components";
 import React, {ReactNode} from "react";
 
 interface Props {
