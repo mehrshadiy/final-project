@@ -1,1 +1,5 @@
 export * from './featureCategories'
+export * from './miniProductSlider'
+export * from './bestSellersSlider'
+export * from './dealsOfTheDaySlider'
+export * from './bottomSlider'
