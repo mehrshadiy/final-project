@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/final-project.iml" filepath="$PROJECT_DIR$/.idea/final-project.iml" />
-      <module fileurl="file://$PROJECT_DIR$/../nest-shop/.idea/nest-shop.iml" filepath="$PROJECT_DIR$/../nest-shop/.idea/nest-shop.iml" />
     </modules>
   </component>
 </project>
