@@ -4,10 +4,15 @@ import Link from "next/link";
 import {IconBox} from "@/components";
 import {browsCategoriesMock} from "@/mock/browsCategory";
 import {menuMock} from "@/mock/menuMock";
+import {useQuery} from "@tanstack/react-query";
+import {getMenuApiCall} from "@/api";
 
 
 export function Menu() {
     // todo load menu data from api
+
+    const {data: MenuData} = useQuery({queryKey:[getMenuApiCall.name], queryFn: context => () => getMenuApiCall()})
+
     return (
         <>
             <div id="all_categories"
