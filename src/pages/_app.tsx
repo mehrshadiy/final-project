@@ -5,6 +5,8 @@ import 'swiper/css'
 import 'swiper/css/autoplay'
 import 'swiper/css/navigation';
 
+import 'react-toastify/dist/ReactToastify.css'
+
 import type {AppProps} from "next/app";
 import {Layout} from "@/components";
 import {Lato, Quicksand} from "next/font/google";
@@ -13,7 +15,15 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import {ToastContainer} from "react-toastify";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+    defaultOptions:{
+        queries:{
+            refetchOnWindowFocus: false,
+            refetchIntervalInBackground: false,
+            retry: false
+        }
+    }
+})
 
 const qiucksand = Quicksand({subsets: ['latin']})
 const lato = Lato({
