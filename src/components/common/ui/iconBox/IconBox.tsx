@@ -33,12 +33,12 @@ export function IconBox({icon, size = 22, link, title, hideTitleOnMobile = false
                         className="absolute -top-[10px] -right-[10px] w-[20px] h-[20px] bg-green-200 rounded-full flex justify-center items-center text-white text-xsmall">
                         {badge}
                     </span>
-                            <i className={` ${icon} text-[${size}px]`}>
+                            <i style={{fontSize: `${size}px`}} className={`${icon}`}>
                                 {span}
                             </i>
                         </div>
                         :
-                        <i className={` ${icon} text-[${size}px]`}>
+                        <i style={{fontSize: `${size}px`}} className={`${icon}`}>
                             {span}
                         </i>
                 }
@@ -60,12 +60,12 @@ export function IconBox({icon, size = 22, link, title, hideTitleOnMobile = false
                         className="absolute -top-[10px] -right-[10px] w-[20px] h-[20px] bg-green-200 rounded-full flex justify-center items-center text-white text-xsmall">
                         {badge}
                     </span>
-                            <i className={` ${icon} text-[${size}px]`}>
+                            <i style={{fontSize: `${size}px`}} className={`${icon}`}>
                                 {span}
                             </i>
                         </div>
                         :
-                        <i className={` ${icon} text-[${size}px]`}>
+                        <i style={{fontSize: `${size}px`}} className={`${icon}`}>
                             {span}
                         </i>
                 }
