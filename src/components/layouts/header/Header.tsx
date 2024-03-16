@@ -1,7 +1,29 @@
 import {IconBox, Logo, Menu, SearchForm} from "@/components";
 import Link from "next/link";
+import {useState, MouseEvent} from "react";
+import {useOverlay} from "@/hooks/useOverlay";
 
 export function Header() {
+
+    const [showMobileMenu, setShowMobileMenu] = useState<boolean>(false)
+
+    useOverlay({
+        onClick: ()=> {
+            setShowMobileMenu(false)
+        },
+        isOverflowHidden: showMobileMenu
+    })
+
+    const menuBtnClickHandler = (e: MouseEvent) => {
+        e.stopPropagation()
+        setShowMobileMenu((prevState) => !prevState)
+    }
+
+    const menuBodyClickHandler = (e: MouseEvent) => {
+      e.stopPropagation()
+    }
+
+
     return (
         <>
             <header className="mb-[33px]">
@@ -11,7 +33,7 @@ export function Header() {
                     <div
                         className="border-2 border-green-150 rounded-[5px] max-w-[700px] w-full mx-[15px] px-[15px] hidden lg:inline-block">
 
-                    <SearchForm inputClassName={'py-[15px]'}/>
+                        <SearchForm inputClassName={'py-[15px]'}/>
 
                     </div>
 
@@ -22,10 +44,11 @@ export function Header() {
                         </li>
                         <li className="flex gap-2 cursor-pointer">
                             <IconBox icon={"icon-shopping-cart"} size={24} title={"Card"} link={"#"}
-                                     hideTitleOnMobile={true} badge={4} titleClasName={"text-medium text-gray-500 font-lato "}/>
+                                     hideTitleOnMobile={true} badge={4}
+                                     titleClasName={"text-medium text-gray-500 font-lato "}/>
                         </li>
                     </ul>
-                    <button id="menu_btn"
+                    <button id="menu_btn" onClick={menuBtnClickHandler}
                             className="flex flex-col justify-between py-[4px] lg:hidden w-[24px] h-[24px]">
                         <span className="w-full h-[1.5px] bg-black inline-block rounded"></span>
                         <span className="w-full h-[1.5px] bg-black inline-block rounded"></span>
@@ -34,13 +57,14 @@ export function Header() {
                 </div>
 
                 <div className="border-gray-200 border-y h">
-                    <div
-                        className="container transition-all w-4/5 rounded-[24px] lg:rounded-[0px] lg:w-auto flex absolute top-0 bottom-0 -left-[100%] lg:static flex-col lg:flex-row justify-start lg:justify-between items-start pt-[16px] pl-[24px] lg:py-[13px] lg:items-center h-[100vh] bg-white lg:h-[70px] mobile-menu z-50">
+                    <div onClick={menuBodyClickHandler}
+                        className={`${showMobileMenu ? 'left-0 fixed overflow-y-scroll' : '-left-[100%] absolute'} container transition-all w-4/5 rounded-[24px] lg:rounded-[0px] lg:w-auto flex  top-0 bottom-0  lg:static flex-col lg:flex-row justify-start lg:justify-between items-start pt-[16px] pl-[24px] lg:py-[13px] lg:items-center h-[100vh] bg-white lg:h-[70px] mobile-menu z-50`}>
 
                         <Menu/>
 
                         <div className="hidden lg:flex items-center shrink-0 gap-3">
-                            <IconBox link={"#"} icon={"icon-headset xl:text-[32px] 2xl:text-[36px] aspect-square"} size={30}/>
+                            <IconBox link={"#"} icon={"icon-headset xl:text-[32px] 2xl:text-[36px] aspect-square"}
+                                     size={30}/>
                             <div>
                                 <Link href="tel:19008888"
                                       className="text-green-200 lg:text-heading6 xl:text-heading5 2xl:text-heading4">1900-8888</Link>

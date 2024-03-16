@@ -3,7 +3,8 @@ import Link from "next/link";
 import {IconBox} from "@/components";
 import {EntityType, MenuItemType} from "@/types";
 import {useMenu} from "@/hooks";
-import {useEffect, useState} from "react";
+import {useState} from "react";
+import {useOverlay} from "@/hooks/useOverlay";
 
 
 export function Menu() {
@@ -13,6 +14,12 @@ export function Menu() {
     const {data: mainMenuItem} = useMenu({position: 'main_menu'})
     const {data: categoryMenuItems} = useMenu({position: 'brows-category'})
 
+    useOverlay({
+    onClick: () => {
+        setShowCategoryMenu(false)
+    }
+    })
+
     const categoryMenuBtnClickHandler = (e: { stopPropagation: () => void; }) => {
         e.stopPropagation()
         setShowCategoryMenu((prevState) => !prevState)
@@ -21,31 +28,21 @@ export function Menu() {
         e.stopPropagation()
     }
 
-    useEffect(()=>{
-
-        const clickHandler = () => setShowCategoryMenu(false)
-
-        document.addEventListener('click', clickHandler)
-
-        return () => removeEventListener('click', clickHandler)
-        },
-        [])
-
     return (
         <>
             <div className={'relative'}>
                 <div onClick={categoryMenuBtnClickHandler}
-                     className="flex cursor-pointer bg-green-200 gap-2.5 text-white px-4 py-3 rounded-[5px] items-center">
+                     className="inline-flex cursor-pointer bg-green-200 gap-2.5 text-white px-4 py-3 rounded-[5px] items-center">
                     <IconBox icon={"icon-apps"} size={24} link={'#'} title={"Browse All Categories"}
                              titleClasName={"text-medium"}/>
                     <IconBox icon={"icon-angle-small-down"} size={24}/>
                 </div>
 
                 <div onClick={categoryBodyClickHandler}
-                     className={`${showCategoryMenu ? 'flex' : 'hidden'} absolute z-20 bg-white left-0 top-16 w-[500px] rounded-[5px] border-[1px] border-green-300 p-[30px] hover:cursor-default`}>
+                     className={`${showCategoryMenu ? 'flex' : 'hidden'} lg:absolute z-20 bg-white left-0 top-16 lg:w-[500px] rounded-[5px] lg:border-[1px] border-green-300 lg:p-[30px] hover:cursor-default`}>
                     <div className="flex flex-wrap justify-between gap-y-[15px]">
                         <IconBox icon={"icon-groceries-1"} size={30} link={"#"}
-                                 linkClassName={"gap-3.5 rounded-[5px] lg:border-[1px] lg:border-gray-300 py-2.5 basis-[calc(50%-8px)] justify-start pl-4 lg:hover:border-green-300"}
+                                 linkClassName={"gap-3.5 rounded-[5px] lg:border-[1px] lg:border-gray-300 py-2.5 basis-full lg:basis-[calc(50%-8px)] justify-start pl-4 lg:hover:border-green-300"}
                                  title={"Milks and Dairies"} titleClasName={"text-heading-sm text-blue-300"}
                                  path={7}/>
 
@@ -74,7 +71,7 @@ export function Menu() {
                             })
                         */}
                         <div id="more_categories"
-                             className="cursor-pointer flex gap-4 items-center justify-center w-full mt-[17px]">
+                             className="cursor-pointer flex gap-4 items-center lg:justify-center w-full mt-[17px]">
                             <IconBox icon={'icon-add'} size={24} title={'More Categories'} titleClasName={"text-heading-sm text-blue-300"}/>
                         </div>
                     </div>
