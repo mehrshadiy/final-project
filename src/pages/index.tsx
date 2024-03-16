@@ -1,20 +1,37 @@
 import {
-    Banner,
-    BestSellersSlider,
-    BottomSlider,
-    DealsOfTheDaySlider,
+    Banner, BestSellersSlider,
+    BottomSlider, DealsOfTheDaySlider,
     IconBox,
     Section,
     SimpleProductSlider
 } from "@/components";
 import {FeatureCategories, MiniProductSlider} from "@/components";
-import {popularProducts} from "@/mock/PopularProducts";
-import {popularFruits} from "@/mock/PopularFruits";
-import {BestSellers} from "@/mock/BestSellers";
+import {useQuery} from "@tanstack/react-query";
+import {getAllProductCall} from "@/api/Product";
+import {ApiResponseType} from "@/types";
+import {ProductType} from "@/types/api/Products";
 import Link from "next/link";
-import {DealsOfTheDaysMock} from "@/mock/DealsOfTheDays";
 
 export default function Home() {
+
+    const {data: popularProductsData} = useQuery<ApiResponseType<ProductType>>({
+        queryKey: [getAllProductCall.name, 'popularProduct'],
+        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {is_popular: {$eq: true}}})
+    })
+    const {data: popularFruitProductsData} = useQuery<ApiResponseType<ProductType>>({
+        queryKey: [getAllProductCall.name, 'popularFruit'],
+        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {is_popular_fruit: {$eq: true}}})
+    })
+    const {data: bestSellerProductsData} = useQuery<ApiResponseType<ProductType>>({
+        queryKey: [getAllProductCall.name, 'bestSeller'],
+        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {is_best_seller: {$eq: true}}})
+    })
+    const {data: dealsOfDayData} = useQuery<ApiResponseType<ProductType>>({
+        queryKey: [getAllProductCall.name, 'dealsOfDay'],
+        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {discount_expire_date: {$notNull: true}}})
+    })
+
+
     return (
         <>
             <Section>
@@ -48,9 +65,13 @@ export default function Home() {
                             size={24}></IconBox>
                     </div>
                 </div>
-                <SimpleProductSlider sliderData={popularProducts} nextEl={'.swiper-nav-right'}
-                                     prevEl={'.swiper-nav-left'}/>
+                {
+                    popularProductsData &&
+                    <SimpleProductSlider sliderData={popularProductsData.data} nextEl={'.swiper-nav-right'}
+                                         prevEl={'.swiper-nav-left'}/>
+                }
             </Section>
+
 
             <Section>
                 <div className="flex justify-between mb-[50px]">
@@ -64,22 +85,39 @@ export default function Home() {
                             size={24}/>
                     </div>
                 </div>
-                <SimpleProductSlider sliderData={popularFruits} nextEl={'.swiper-nav-right2'}
-                                     prevEl={'.swiper-nav-left2'}/>
+                {
+                    popularFruitProductsData &&
+                    <SimpleProductSlider sliderData={popularFruitProductsData.data} nextEl={'.swiper-nav-right2'}
+                                         prevEl={'.swiper-nav-left2'}/>
+                }
             </Section>
 
             <Section>
+                <div className={'flex justify-between mb-[50px]'}>
+                    <h2 className={'text-heading6 md:text-heading5 lg:text-heading4 xl:text-heading3 text-blue-300'}>
+                        Best Sellers
+                    </h2>
+                </div>
                 <div className="flex gap-[24px]">
                     <div
                         className="bg-[url('/assets/images/bg-leaf.png')] bg-no-repeat bg-bottom bg-[#3BB77E] rounded-[10px] shadow-[20px_20px_40px_0_rgba(24,24,24,0.07)] p-12 pt-[38px] self-stretch flex-col justify-between max-w-[370px] hidden xl:flex">
-                        <h3 className="text-heading2 text-blue-300">Bring nature into your home</h3>
+                        <h3 className="text-heading2 text-blue-300">
+                            Bring nature into your home
+                        </h3>
                         <Link href="#"
-                           className="mt-6 pl-[15px] pr-2.5 py-2 bg-yellow-100 hover:bg-green-200 rounded-[3px] cursor-pointer inline-flex max-w-max items-center gap-2.5">
-                            <div className="text-xsmall text-white">Shop now</div>
-                            <IconBox icon={"icon-arrow-small-right"} size={24} ></IconBox>
+                              className="mt-6 pl-[15px] pr-2.5 py-2 bg-yellow-100 hover:bg-green-200 rounded-[3px] cursor-pointer inline-flex max-w-max items-center gap-2.5">
+                            <div className="text-xsmall text-white">
+                                Shop now
+                            </div>
+                            <IconBox icon={"icon-arrow-small-right"} size={24}/>
                         </Link>
                     </div>
-                    <BestSellersSlider sliderData={BestSellers}/>
+                    {
+                        bestSellerProductsData &&
+                        <div className={'flex-grow'}>
+                            <BestSellersSlider sliderData={bestSellerProductsData.data}/>
+                        </div>
+                    }
                 </div>
             </Section>
 
@@ -92,12 +130,16 @@ export default function Home() {
                         <IconBox icon={"icon-angle-small-right"} size={24}/>
                     </Link>
                 </div>
-                <DealsOfTheDaySlider sliderData={DealsOfTheDaysMock}/>
+                {
+                    dealsOfDayData &&
+                    <DealsOfTheDaySlider sliderData={dealsOfDayData.data}/>
+                }
             </Section>
 
             <Section>
                 <BottomSlider/>
             </Section>
         </>
-    );
+    )
+        ;
 }
