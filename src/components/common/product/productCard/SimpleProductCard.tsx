@@ -1,28 +1,23 @@
 import {Badge, IconBox, ImageView, Rating} from "@/components";
 import Link from "next/link";
+import {EntityType} from "@/types";
+import {ProductType} from "@/types/api/Products";
 
 interface Props {
-    data: {
-        title: string
-        image: string
-        category: string
-        rate: number
-        weight: number
-        unit: string
-        price: number
-        sale_price: number
-        label: string
-        total?: number
-        sold?: number
-    }
+    data: EntityType<ProductType>
 }
+
 
 export function SimpleProductCard({data}: Props) {
     return (
         <div
             className="group border-[1px] border-gray-200 hover:border-green-150 rounded-[10px] hover:shadow-[20px_20px_40px_0_rgba(24,24,24,0.07)] relative p-3 md:p-4 xl:px-5 xl:pb-5 lg:pt-[65px] h-full">
 
-            <Badge badge={data.label} price={data.price} salePrice={data.sale_price}/>
+            {
+                data.attributes.label &&
+                <Badge badge={data.attributes.label} price={data.attributes.price}
+                       salePrice={data.attributes.sell_price}/>
+            }
 
             <div
                 className="mt-8 hidden group-hover:flex rounded-[5px] border-[1px] border-green-200 w-max absolute top-[100px] left-[50%] translate-x-[-50%] bg-white productAction cursor-pointer">
@@ -36,57 +31,61 @@ export function SimpleProductCard({data}: Props) {
                     <IconBox icon={"icon-eye"} size={15}></IconBox>
                 </div>
             </div>
-            <ImageView src={data.image} classname={"m-auto w-full aspect-[3/2] mb-[28px]"} alt={'product image'}
+            <ImageView src={data.attributes.thumbnail?.data?.attributes.url}
+                       classname={"m-auto w-full aspect-[3/2] mb-[28px]"} alt={'product image'}
                        height={145} width={202}/>
             <div className="flex flex-col gap-2">
-                <div className="text-gray-500 text-xsmall">
-                    {data.category}
-                </div>
+                {
+                    data.attributes.categories?.data[0] &&
+                    <div className="text-gray-500 text-xsmall">
+                        {data.attributes.categories?.data[0].attributes.title}
+                    </div>
+                }
                 <Link href={'#'}>
                     <h3 className="text-heading-sm text-blue-300 max-h-[50px] overflow-hidden">
-                        {data.title}
+                        {data.attributes.title}
                     </h3>
                 </Link>
 
                 <div className="flex gap-4">
 
-                    <Rating rate={data.rate}/>
+                    <Rating rate={data.attributes.rate}/>
 
                 </div>
                 <div className="font-lato text-xsmall text-gray-500">
-                    {data.weight} {data.unit}
+                    {data.attributes.weight} {data.attributes.unit}
                 </div>
             </div>
 
             {
-                data.total && data.sold ?
+                data.attributes.total && data.attributes.sold ?
                     <>
                         <div className="flex items-center justify-between mt-3">
 
                             {
-                                data.sale_price ?
+                                data.attributes.sell_price ?
                                     <div>
                                 <span className="text-heading5 text-green-200">
-                                    ${data.sale_price}
+                                    ${data.attributes.sell_price}
                                 </span>
                                         <span className="text-heading-sm line-through text-gray-500">
-                                    ${data.price}
+                                    ${data.attributes.price}
                                 </span>
                                     </div>
                                     :
                                     <span className="text-heading5 text-green-200">
-                                    ${data.price}
+                                    ${data.attributes.price}
                                 </span>
                             }
 
 
                         </div>
                         <div className="mt-[15px] bg-gray-200 h-[4px] w-full rounded-[2px]">
-                            <div style={{width: `${(data.sold / data.total) * 100}%`}}
+                            <div style={{width: `${(data.attributes.sold / data.attributes.total) * 100}%`}}
                                  className={`bg-green-200 h-[4px] rounded-[2px]`}></div>
                         </div>
                         <div className="mt-2.5 font-lato text-blue-300 text-xsmall">
-                            Sold: {data.sold}/{data.total}
+                            Sold: {data.attributes.sold}/{data.attributes.total}
                         </div>
                         <div className="mt-[23px]">
                             <button
@@ -99,18 +98,18 @@ export function SimpleProductCard({data}: Props) {
                     :
                     <div className="flex items-center justify-between mt-3">
                         {
-                            data.sale_price ?
+                            data.attributes.sell_price ?
                                 <div>
                                 <span className="text-heading5 text-green-200">
-                                    ${data.sale_price}
+                                    ${data.attributes.sell_price}
                                 </span>
                                     <span className="text-heading-sm line-through text-gray-500">
-                                    ${data.price}
+                                    ${data.attributes.price}
                                 </span>
                                 </div>
                                 :
                                 <span className="text-heading5 text-green-200">
-                                    ${data.price}
+                                    ${data.attributes.price}
                                 </span>
                         }
 
