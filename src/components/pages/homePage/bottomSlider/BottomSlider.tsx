@@ -5,6 +5,7 @@ import {useQuery} from "@tanstack/react-query";
 import {ApiResponseType} from "@/types";
 import {ProductType} from "@/types/api/Products";
 import {getAllProductCall} from "@/api/Product";
+import {InView} from "react-intersection-observer";
 
 interface Props {
 
@@ -12,7 +13,7 @@ interface Props {
 
 export function BottomSlider({}: Props) {
 
-    const {data: topSellingData} = useQuery<ApiResponseType<ProductType>>({
+    const {data: topSellingData, refetch: topSellingDataRefetch} = useQuery<ApiResponseType<ProductType>>({
         queryKey: [getAllProductCall.name, 'topSelling'],
         queryFn: () => getAllProductCall(
             {
@@ -24,9 +25,10 @@ export function BottomSlider({}: Props) {
                     withCount: false
                 }
             }
-        )
+        ),
+        enabled: false
     })
-    const {data: trendingProductData} = useQuery<ApiResponseType<ProductType>>({
+    const {data: trendingProductData, refetch: trendingProductDataRefetch} = useQuery<ApiResponseType<ProductType>>({
         queryKey: [getAllProductCall.name, 'trendingProduct'],
         queryFn: () => getAllProductCall(
             {
@@ -38,9 +40,10 @@ export function BottomSlider({}: Props) {
                     withCount: false
                 }
             }
-        )
+        ),
+        enabled: false
     })
-    const {data: RecentlyAddedData} = useQuery<ApiResponseType<ProductType>>({
+    const {data: RecentlyAddedData, refetch: RecentlyAddedDataRefetch} = useQuery<ApiResponseType<ProductType>>({
         queryKey: [getAllProductCall.name, 'RecentlyAdded'],
         queryFn: () => getAllProductCall(
             {
@@ -52,9 +55,10 @@ export function BottomSlider({}: Props) {
                     withCount: false
                 }
             }
-        )
+        ),
+        enabled: false
     })
-    const {data: topRateData} = useQuery<ApiResponseType<ProductType>>({
+    const {data: topRateData, refetch: topRateDataRefetch} = useQuery<ApiResponseType<ProductType>>({
         queryKey: [getAllProductCall.name, 'topRate'],
         queryFn: () => getAllProductCall(
             {
@@ -66,7 +70,8 @@ export function BottomSlider({}: Props) {
                     withCount: false
                 }
             }
-        )
+        ),
+        enabled: false
     })
 
 
@@ -94,43 +99,60 @@ export function BottomSlider({}: Props) {
                 }
             >
                 {
-                    topSellingData && topSellingData.data.length > 0 &&
-                    <SwiperSlide>
-                    {
-                        topSellingData &&
-                        <ProductVerticalList title={"Top Selling"} data={topSellingData.data}/>
-                    }
-                </SwiperSlide>
+                    <InView as="div" onChange={(inView) => inView && topSellingDataRefetch()}>
+
+                        {
+                            topSellingData && topSellingData.data.length > 0 &&
+                            <SwiperSlide>
+                                {
+                                    topSellingData &&
+                                    <ProductVerticalList title={"Top Selling"} data={topSellingData.data}/>
+                                }
+                            </SwiperSlide>
+                        }
+                    </InView>
                 }
 
                 {
-                    trendingProductData && trendingProductData.data.length > 0 &&
-                    <SwiperSlide>
-                    {
-                        trendingProductData &&
-                        <ProductVerticalList title={"Trending Products"} data={trendingProductData.data}/>
-                    }
-                </SwiperSlide>
+                    <InView as="div" onChange={(inView) => inView && trendingProductDataRefetch()}>
+                        {
+                            trendingProductData && trendingProductData.data.length > 0 &&
+                            <SwiperSlide>
+                                {
+                                    trendingProductData &&
+                                    <ProductVerticalList title={"Trending Products"} data={trendingProductData.data}/>
+                                }
+                            </SwiperSlide>
+                        }
+                    </InView>
                 }
 
                 {
-                    RecentlyAddedData && RecentlyAddedData.data.length > 0 &&
-                    <SwiperSlide>
-                    {
-                        RecentlyAddedData &&
-                        <ProductVerticalList title={"Recently Added"} data={RecentlyAddedData.data}/>
-                    }
-                </SwiperSlide>
+                    <InView as="div" onChange={(inView) => inView && RecentlyAddedDataRefetch()}>
+                        {
+                            RecentlyAddedData && RecentlyAddedData.data.length > 0 &&
+                            <SwiperSlide>
+                                {
+                                    RecentlyAddedData &&
+                                    <ProductVerticalList title={"Recently Added"} data={RecentlyAddedData.data}/>
+                                }
+                            </SwiperSlide>
+                        }
+                    </InView>
                 };
 
                 {
-                    topRateData && topRateData.data.length > 0 &&
-                    <SwiperSlide>
+                    <InView as="div" onChange={(inView) => inView && topRateDataRefetch()}>
                         {
-                            topRateData &&
-                            <ProductVerticalList title={"Top Rated"} data={topRateData.data}/>
+                            topRateData && topRateData.data.length > 0 &&
+                            <SwiperSlide>
+                                {
+                                    topRateData &&
+                                    <ProductVerticalList title={"Top Rated"} data={topRateData.data}/>
+                                }
+                            </SwiperSlide>
                         }
-                    </SwiperSlide>
+                    </InView>
                 }
             </Swiper>
         </>

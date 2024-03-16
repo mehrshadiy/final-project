@@ -11,25 +11,77 @@ import {getAllProductCall} from "@/api/Product";
 import {ApiResponseType} from "@/types";
 import {ProductType} from "@/types/api/Products";
 import Link from "next/link";
+import {InView} from "react-intersection-observer";
 
 export default function Home() {
 
-    const {data: popularProductsData} = useQuery<ApiResponseType<ProductType>>({
-        queryKey: [getAllProductCall.name, 'popularProduct'],
-        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {is_popular: {$eq: true}}})
-    })
-    const {data: popularFruitProductsData} = useQuery<ApiResponseType<ProductType>>({
-        queryKey: [getAllProductCall.name, 'popularFruit'],
-        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {is_popular_fruit: {$eq: true}}})
-    })
-    const {data: bestSellerProductsData} = useQuery<ApiResponseType<ProductType>>({
-        queryKey: [getAllProductCall.name, 'bestSeller'],
-        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {is_best_seller: {$eq: true}}})
-    })
-    const {data: dealsOfDayData} = useQuery<ApiResponseType<ProductType>>({
-        queryKey: [getAllProductCall.name, 'dealsOfDay'],
-        queryFn: () => getAllProductCall({populate: ["categories", 'thumbnail'], filters: {discount_expire_date: {$notNull: true}}})
-    })
+    const {data: popularProductsData, refetch: popularProductRefetch} = useQuery<ApiResponseType<ProductType>>(
+        {
+            queryKey: [getAllProductCall.name, 'popularProduct'],
+            queryFn: () => getAllProductCall({
+                    populate: [
+                        "categories",
+                        'thumbnail'
+                    ],
+                    filters: {
+                        is_popular: {
+                            $eq: true
+                        }
+                    }
+                }
+            ),
+            enabled: false
+        })
+    const {data: popularFruitProductsData, refetch: popularFruitRefetch} = useQuery<ApiResponseType<ProductType>>(
+        {
+            queryKey: [getAllProductCall.name, 'popularFruit'],
+            queryFn: () => getAllProductCall({
+                    populate: ["categories", 'thumbnail'],
+                    filters: {
+                        is_popular_fruit: {
+                            $eq: true
+                        }
+                    }
+                }
+            ),
+            enabled: false
+        })
+    const {data: bestSellerProductsData, refetch: bestSellerRefetch} = useQuery<ApiResponseType<ProductType>>(
+        {
+            queryKey: [getAllProductCall.name, 'bestSeller'],
+            queryFn: () => getAllProductCall(
+                {
+                    populate: [
+                        "categories",
+                        'thumbnail'
+                    ],
+                    filters: {
+                        is_best_seller: {
+                            $eq: true
+                        }
+                    }
+                }
+            ),
+            enabled: false
+        })
+    const {data: dealsOfDayData, refetch: dealsOfDayRefetch} = useQuery<ApiResponseType<ProductType>>(
+        {
+            queryKey: [getAllProductCall.name, 'dealsOfDay'],
+            queryFn: () => getAllProductCall(
+                {
+                    populate: [
+                        "categories",
+                        'thumbnail'
+                    ],
+                    filters: {
+                        discount_expire_date: {
+                            $notNull: true
+                        }
+                    }
+                }
+            ),
+            enabled: false
+        })
 
 
     return (
@@ -53,6 +105,7 @@ export default function Home() {
                 <MiniProductSlider/>
             </Section>
 
+            <InView as="div" onChange={(inView) => inView && popularProductRefetch()}>
             <Section>
                 <div className="flex justify-between mb-[50px]">
                     <h2 className="text-heading3 text-blue-300">Popular Products</h2>
@@ -71,8 +124,9 @@ export default function Home() {
                                          prevEl={'.swiper-nav-left'}/>
                 }
             </Section>
+            </InView>
 
-
+            <InView as="div" onChange={(inView) => inView && popularFruitRefetch()}>
             <Section>
                 <div className="flex justify-between mb-[50px]">
                     <h2 className="text-heading3 text-blue-300">Popular Fruits</h2>
@@ -91,7 +145,9 @@ export default function Home() {
                                          prevEl={'.swiper-nav-left2'}/>
                 }
             </Section>
+            </InView>
 
+            <InView as="div" onChange={(inView) => inView && bestSellerRefetch()}>
             <Section>
                 <div className={'flex justify-between mb-[50px]'}>
                     <h2 className={'text-heading6 md:text-heading5 lg:text-heading4 xl:text-heading3 text-blue-300'}>
@@ -120,7 +176,9 @@ export default function Home() {
                     }
                 </div>
             </Section>
+            </InView>
 
+            <InView as="div" onChange={(inView) => inView && dealsOfDayRefetch()}>
             <Section>
                 <div className="flex justify-between items-center mb-[50px]">
                     <h2 className="text-heading6 md:text-heading5 lg:text-heading4 xl:text-heading3 text-blue-300">
@@ -135,6 +193,7 @@ export default function Home() {
                     <DealsOfTheDaySlider sliderData={dealsOfDayData.data}/>
                 }
             </Section>
+            </InView>
 
             <Section>
                 <BottomSlider/>
